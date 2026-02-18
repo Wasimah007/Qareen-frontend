@@ -1,0 +1,169 @@
+{
+  "appName": "Qareen",
+  "tagline": "Constant Companion Against Waswasa",
+  "bismillah": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+  "nav": {
+    "home": "Home",
+    "ask": "Ask",
+    "waswasa": "Waswasa",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Islamic Ethical Guidance",
+    "subtitle": "AI-powered answers rooted in Qur'an & authentic Hadith",
+    "cta": "Ask a Question",
+    "ctaSub": "Start your journey",
+    "tag": "1.9 Billion Muslims. One Companion."
+  },
+  "trust": {
+    "quran": "Qur'anic Evidence",
+    "hadith": "Sahih Hadith",
+    "scholar": "Scholar-Reviewed",
+    "madhhab": "Madhhab-Aware"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "step1": "Type your question or describe your situation",
+    "step2": "AI detects topic and intent automatically",
+    "step3": "Retrieves relevant Qur'an & Hadith evidence",
+    "step4": "Returns structured verdict with full citations"
+  },
+  "features": {
+    "title": "What Makes Qareen Unique",
+    "list": [
+      "Instant Hadith-based Guidance",
+      "Halal / Haram Decision Helper",
+      "Waswasa Counter & Calming Tool",
+      "Multi-language Support (EN, AR, UR, FR, TR)",
+      "Evidence-based — No Unseen Claims",
+      "Scholar Verification Workflow",
+      "Madhhab-aware Answers"
+    ]
+  },
+  "ask": {
+    "title": "Ask Anything",
+    "subtitle": "Questions about ethics, finance, worship, food, relationships & more",
+    "placeholder": "Describe your situation or ask an ethical question…",
+    "examples": "Try: \"I feel angry and want to insult someone\" or \"Is bank interest allowed?\"",
+    "button": "Get Guidance",
+    "loading": "Searching sources…",
+    "shortcut": "Ctrl+Enter to submit",
+    "newQuestion": "New Question",
+    "save": "Save",
+    "saved": "Saved",
+    "share": "Share"
+  },
+  "verdict": {
+    "label": "Verdict",
+    "halal": "Halal",
+    "haram": "Haram",
+    "makruh": "Makruh (Disliked)",
+    "mubah": "Permissible",
+    "obligatory": "Obligatory",
+    "recommended": "Recommended",
+    "scholarly": "Needs Scholar Review",
+    "unknown": "Unknown"
+  },
+  "citations": {
+    "quran": "Qur'anic Reference",
+    "hadith": "Hadith Reference",
+    "action": "Suggested Action",
+    "sources": "Sources",
+    "authenticity": "Authenticity Level"
+  },
+  "waswasa": {
+    "title": "Waswasa Counter",
+    "subtitle": "Share what's troubling your heart — you are not alone",
+    "placeholder": "Describe the thought or doubt troubling you…",
+    "button": "Find Peace",
+    "loading": "Searching for calm…",
+    "fiqhPrinciple": "Fiqh Principle",
+    "calmingVerse": "Calming Verse",
+    "dhikr": "Dhikr",
+    "advice": "Guidance",
+    "steps": "Steps to Take",
+    "certaintyPrinciple": "Al-Yaqeen lā yazūlu bil-shakk — Certainty is not removed by doubt"
+  },
+  "dashboard": {
+    "title": "Question History",
+    "empty": "No questions yet.",
+    "emptySubtitle": "Ask something to get started!",
+    "savedOnly": "Saved only",
+    "allQuestions": "All questions",
+    "questionsAsked": "questions asked",
+    "questionsSaved": "saved"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "madhhab": "Preferred Madhhab",
+    "madhhabOptions": ["General", "Hanafi", "Maliki", "Shafi'i", "Hanbali", "Jafari"],
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "account": "Account",
+    "subscription": "Subscription",
+    "free": "Free",
+    "premium": "Premium",
+    "upgradeBtn": "Upgrade to Premium",
+    "premiumFeatures": [
+      "Unlimited questions per day",
+      "Scholar-verified answers",
+      "Advanced madhhab comparison",
+      "Waswasa therapy module",
+      "Offline mode"
+    ],
+    "deleteAccount": "Delete Account",
+    "saveSettings": "Save Settings",
+    "saved": "Settings saved!"
+  },
+  "auth": {
+    "loginTitle": "Welcome Back",
+    "loginSubtitle": "Sign in to your Qareen account",
+    "registerTitle": "Join Qareen",
+    "registerSubtitle": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "fullName": "Full Name (optional)",
+    "loginBtn": "Sign In",
+    "registerBtn": "Create Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in",
+    "forgotPassword": "Forgot password?"
+  },
+  "admin": {
+    "title": "Scholar Dashboard",
+    "stats": "Statistics",
+    "totalUsers": "Total Users",
+    "totalQuestions": "Total Questions",
+    "verified": "Scholar Verified",
+    "waswasaSessions": "Waswasa Sessions",
+    "verifyQueue": "Verification Queue",
+    "markVerified": "Mark Verified",
+    "markUnverified": "Mark Unverified",
+    "addNote": "Add Scholar Note",
+    "submitNote": "Submit",
+    "verifiedBadge": "Scholar Verified ✓"
+  },
+  "disclaimer": "This app provides educational guidance and is not a substitute for a qualified scholar.",
+  "evidenceBased": "Based on Qur'an and Hadith",
+  "scholarVerified": "Scholar Verified",
+  "loading": "Loading…",
+  "error": {
+    "general": "Something went wrong. Please try again.",
+    "quota": "Daily question limit reached. Upgrade to Premium for unlimited access.",
+    "notLoggedIn": "Please sign in to view this page."
+  },
+  "quota": {
+    "freeRemaining": "{count} free questions remaining today",
+    "upgradeCta": "Upgrade for unlimited"
+  }
+}
