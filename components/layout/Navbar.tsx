@@ -1,200 +1,170 @@
 'use client'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { Menu, X, LogOut, User } from 'lucide-react'
-import { useAuthStore } from '@/lib/auth'
-import { useSettingsStore, LANGUAGES, getDir } from '@/lib/settings'
-import { clsx } from 'clsx'
+import { useSettingsStore } from '@/lib/settings'
+import { Menu, X, ChevronDown } from 'lucide-react'
 
-const NAV_ITEMS = [
-  { href: '/',           label: 'Home',       labelKey: 'nav.home'      },
-  { href: '/ask',        label: 'Ask',        labelKey: 'nav.ask'       },
-  { href: '/waswasa',    label: 'Waswasa',    labelKey: 'nav.waswasa'   },
-  { href: '/dashboard',  label: 'Dashboard',  labelKey: 'nav.dashboard' },
-  { href: '/settings',   label: 'Settings',   labelKey: 'nav.settings'  },
+const NAV_PRIMARY = [
+  { href:'/ask',     label:'Ask' },
+  { href:'/waswasa', label:'Waswasa' },
 ]
-
-// Simple inline translation hook
-function useT() {
-  const { language } = useSettingsStore()
-  const [translations, setTranslations] = useState<Record<string, any>>({})
-  if (typeof window !== 'undefined' && Object.keys(translations).length === 0) {
-    import(`@/public/locales/${language}/common.json`).then(m => setTranslations(m.default)).catch(() => {})
-  }
-  return (key: string, fallback = key) => {
-    const parts = key.split('.')
-    let val: any = translations
-    for (const p of parts) val = val?.[p]
-    return typeof val === 'string' ? val : fallback
-  }
-}
+const NAV_TOOLS = [
+  { href:'/prayer-times', label:'🕌 Prayer Times',  desc:'Live namaz times' },
+  { href:'/qibla',        label:'🧭 Qibla',          desc:'Direction to Mecca' },
+  { href:'/dhikr',        label:'📿 Dhikr Counter',  desc:'Digital tasbeeh' },
+  { href:'/dua',          label:'🤲 Duas',            desc:'Dua collection' },
+  { href:'/four-qul',     label:'🌙 Char Qul',         desc:'4 Quls before sleep' },
+  { href:'/missed-prayers',label:'🕌 Prayer Tracker',  desc:'Daily prayer log & graphs' },
+]
+const NAV_LEARN = [
+  { href:'/hadith',   label:'📜 Daily Hadith',     desc:'Authentic hadiths' },
+  { href:'/calendar', label:'🗓️ Islamic Calendar',  desc:'Hijri dates & events' },
+]
+const NAV_USER = [
+  { href:'/dashboard', label:'📋 Dashboard' },
+  { href:'/saved',     label:'🔖 Saved' },
+  { href:'/profile',   label:'👤 Profile' },
+  { href:'/settings',  label:'⚙️ Settings' },
+]
+const LANGUAGES = [
+  { code:'en', label:'EN' }, { code:'ar', label:'AR' },
+  { code:'ur', label:'UR' }, { code:'fr', label:'FR' }, { code:'tr', label:'TR' },
+]
 
 export default function Navbar() {
   const pathname = usePathname()
-  const { user, logout } = useAuthStore()
   const { language, setLanguage } = useSettingsStore()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [langOpen, setLangOpen] = useState(false)
-  const dir = getDir(language)
+  const [toolsOpen, setToolsOpen] = useState(false)
+  const [learnOpen, setLearnOpen] = useState(false)
+  const toolsRef = useRef<HTMLDivElement>(null)
+  const learnRef = useRef<HTMLDivElement>(null)
 
-  const currentLang = LANGUAGES.find(l => l.code === language)
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) setToolsOpen(false)
+      if (learnRef.current && !learnRef.current.contains(e.target as Node)) setLearnOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const active = (href: string) => pathname === href
 
   return (
     <>
-      <nav
-        dir={dir}
-        className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-[#1e4a2e] h-16 px-4 md:px-8 flex items-center justify-between"
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 no-underline">
-          <span className="font-display text-2xl text-gold-500 leading-none">
-            {language === 'ar' ? 'قرين' : language === 'ur' ? 'قرین' : 'Qareen'}
-          </span>
-          <span className="hidden md:block text-[11px] text-[#9ab8a4] tracking-wider">
-            {language === 'en' && 'Constant Companion'}
-            {language === 'fr' && 'Compagnon Constant'}
-            {language === 'tr' && 'Sürekli Yoldaş'}
-          </span>
+      <nav className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 md:px-6 border-b border-[#1e4a2e]"
+        style={{ background:'rgba(10,31,20,0.96)', backdropFilter:'blur(12px)' }}>
+
+        <Link href="/" className="flex items-center gap-2 no-underline shrink-0">
+          <span className="font-display text-xl" style={{ color:'#d4a853', fontFamily:'Georgia,serif' }}>Qareen</span>
+          <span className="hidden sm:block text-[11px] text-[#9ab8a4] italic">Constant Companion</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-1">
-          {NAV_ITEMS.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                'px-3 py-1.5 rounded-full text-[13px] transition-all no-underline',
-                pathname === item.href
-                  ? 'bg-gold-500/15 text-gold-500 border border-gold-500/30'
-                  : 'text-[#9ab8a4] hover:text-gold-400'
-              )}
-            >
-              {item.label}
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-0.5 ml-6 flex-1 flex-wrap">
+          {NAV_PRIMARY.map(n => (
+            <Link key={n.href} href={n.href}
+              className="px-3 py-1.5 rounded-full text-[13px] no-underline transition-all"
+              style={{ background:active(n.href)?'#2d9e5f22':'transparent', border:`1px solid ${active(n.href)?'#2d9e5f66':'transparent'}`, color:active(n.href)?'#2d9e5f':'#9ab8a4' }}>
+              {n.label}
             </Link>
           ))}
-          {user?.role === 'admin' || user?.role === 'scholar' ? (
-            <Link href="/admin" className="px-3 py-1.5 rounded-full text-[13px] text-[#9ab8a4] hover:text-gold-400 no-underline">
-              Admin
-            </Link>
-          ) : null}
-        </div>
 
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          {/* Language picker */}
-          <div className="relative">
-            <button
-              onClick={() => setLangOpen(!langOpen)}
-              className="px-3 py-1.5 rounded-full text-[12px] border border-[#1e4a2e] text-[#9ab8a4] hover:border-gold-500/50 transition-all"
-            >
-              {currentLang?.native}
+          {/* Tools dropdown */}
+          <div ref={toolsRef} className="relative">
+            <button onClick={() => { setToolsOpen(o=>!o); setLearnOpen(false) }}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[13px] transition-all"
+              style={{ background:toolsOpen?'#d4a85322':'transparent', color:toolsOpen?'#d4a853':'#9ab8a4', border:`1px solid ${toolsOpen?'#d4a85344':'transparent'}` }}>
+              Tools <ChevronDown size={12} className={`transition-transform ${toolsOpen?'rotate-180':''}`} />
             </button>
-            {langOpen && (
-              <div className="absolute top-10 right-0 bg-[#0f2d1c] border border-[#1e4a2e] rounded-xl p-2 shadow-xl min-w-[140px] z-50">
-                {LANGUAGES.map(l => (
-                  <button
-                    key={l.code}
-                    onClick={() => { setLanguage(l.code); setLangOpen(false) }}
-                    className={clsx(
-                      'w-full text-left px-3 py-2 rounded-lg text-[13px] transition-all',
-                      l.code === language ? 'bg-gold-500/20 text-gold-400' : 'text-[#9ab8a4] hover:bg-[#142d1e]'
-                    )}
-                  >
-                    {l.native}
-                  </button>
+            {toolsOpen && (
+              <div className="absolute top-full left-0 mt-2 w-56 rounded-2xl shadow-xl overflow-hidden z-50"
+                style={{ background:'#0f2d1c', border:'1px solid #1e4a2e' }}>
+                {NAV_TOOLS.map(n => (
+                  <Link key={n.href} href={n.href} onClick={() => setToolsOpen(false)}
+                    className="block px-4 py-3 no-underline hover:bg-[#142d1e] transition-colors border-b border-[#1e4a2e] last:border-0">
+                    <p className="text-[13px] text-[#f0ece0]">{n.label}</p>
+                    <p className="text-[11px] text-[#9ab8a4]">{n.desc}</p>
+                  </Link>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Auth */}
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="hidden md:block text-[12px] text-[#9ab8a4]">{user.username}</span>
-              <button
-                onClick={logout}
-                className="p-2 rounded-full border border-[#1e4a2e] text-[#9ab8a4] hover:text-red-400 transition-colors"
-              >
-                <LogOut size={14} />
-              </button>
-            </div>
-          ) : (
-            <div className="hidden md:flex gap-2">
-              <Link href="/auth/login" className="px-3 py-1.5 rounded-full text-[13px] text-[#9ab8a4] border border-[#1e4a2e] hover:border-gold-500/50 no-underline transition-all">
-                Sign In
-              </Link>
-              <Link href="/auth/register" className="px-3 py-1.5 rounded-full text-[13px] btn-primary no-underline">
-                Sign Up
-              </Link>
-            </div>
-          )}
+          {/* Learn dropdown */}
+          <div ref={learnRef} className="relative">
+            <button onClick={() => { setLearnOpen(o=>!o); setToolsOpen(false) }}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[13px] transition-all"
+              style={{ background:learnOpen?'#d4a85322':'transparent', color:learnOpen?'#d4a853':'#9ab8a4', border:`1px solid ${learnOpen?'#d4a85344':'transparent'}` }}>
+              Learn <ChevronDown size={12} className={`transition-transform ${learnOpen?'rotate-180':''}`} />
+            </button>
+            {learnOpen && (
+              <div className="absolute top-full left-0 mt-2 w-56 rounded-2xl shadow-xl overflow-hidden z-50"
+                style={{ background:'#0f2d1c', border:'1px solid #1e4a2e' }}>
+                {NAV_LEARN.map(n => (
+                  <Link key={n.href} href={n.href} onClick={() => setLearnOpen(false)}
+                    className="block px-4 py-3 no-underline hover:bg-[#142d1e] transition-colors border-b border-[#1e4a2e] last:border-0">
+                    <p className="text-[13px] text-[#f0ece0]">{n.label}</p>
+                    <p className="text-[11px] text-[#9ab8a4]">{n.desc}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="md:hidden p-2 text-[#9ab8a4]"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {NAV_USER.map(n => (
+            <Link key={n.href} href={n.href}
+              className="px-3 py-1.5 rounded-full text-[13px] no-underline transition-all"
+              style={{ color:active(n.href)?'#d4a853':'#9ab8a4', background:active(n.href)?'#d4a85322':'transparent', border:`1px solid ${active(n.href)?'#d4a85344':'transparent'}` }}>
+              {n.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 ml-auto">
+          <select value={language} onChange={e => setLanguage(e.target.value as any)}
+            className="bg-transparent border border-[#1e4a2e] rounded-full px-2 py-1 text-[11px] text-[#9ab8a4] focus:outline-none cursor-pointer">
+            {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+          </select>
+          <button onClick={() => setMobileOpen(o=>!o)} className="md:hidden p-2 text-[#9ab8a4]">
+            {mobileOpen ? <X size={20}/> : <Menu size={20}/>}
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      <div className="h-14" />
+
+      {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-[#0a1f14]/95 backdrop-blur-sm pt-16 flex flex-col p-6 md:hidden">
-          {NAV_ITEMS.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={clsx(
-                'py-4 text-xl font-display border-b border-[#1e4a2e] no-underline transition-colors',
-                pathname === item.href ? 'text-gold-500' : 'text-[#f0ece0]'
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-          {!user && (
-            <div className="mt-6 flex gap-3">
-              <Link href="/auth/login" onClick={() => setMobileOpen(false)} className="flex-1 py-3 text-center rounded-full border border-[#1e4a2e] text-[#9ab8a4] no-underline">Sign In</Link>
-              <Link href="/auth/register" onClick={() => setMobileOpen(false)} className="flex-1 py-3 text-center rounded-full btn-primary no-underline">Sign Up</Link>
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMobileOpen(false)}>
+          <div className="absolute inset-0 bg-black/60"/>
+          <div className="absolute top-14 left-0 right-0 overflow-y-auto max-h-[calc(100vh-56px)]"
+            style={{ background:'#0a1f14', border:'1px solid #1e4a2e' }}
+            onClick={e => e.stopPropagation()}>
+            <div className="p-4 space-y-1">
+              {[
+                { title:'Main', links: NAV_PRIMARY.map(n => ({ ...n, desc:undefined })) },
+                { title:'Tools', links: NAV_TOOLS },
+                { title:'Learn', links: NAV_LEARN },
+                { title:'Account', links: NAV_USER.map(n => ({ ...n, desc:undefined })) },
+              ].map(group => (
+                <div key={group.title}>
+                  <p className="text-[10px] uppercase tracking-widest text-[#9ab8a4]/40 px-3 py-2">{group.title}</p>
+                  {group.links.map((n: any) => (
+                    <Link key={n.href} href={n.href} onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2.5 rounded-xl no-underline text-[14px] transition-all"
+                      style={{ background:active(n.href)?'#d4a85322':'transparent', color:active(n.href)?'#d4a853':'#f0ece0' }}>
+                      {n.label}
+                    </Link>
+                  ))}
+                </div>
+              ))}
             </div>
-          )}
-          {user && (
-            <button onClick={() => { logout(); setMobileOpen(false) }} className="mt-6 py-3 text-red-400 border border-red-900/40 rounded-full">
-              Sign Out
-            </button>
-          )}
+          </div>
         </div>
       )}
-
-      {/* Mobile bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-card border-t border-[#1e4a2e] flex justify-around py-2 pb-safe">
-        {NAV_ITEMS.map(item => {
-          const icons: Record<string, string> = { '/': '🕌', '/ask': '✦', '/waswasa': '🌙', '/dashboard': '📋', '/settings': '⚙️' }
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                'flex flex-col items-center gap-0.5 px-3 py-1 no-underline transition-opacity',
-                pathname === item.href ? 'opacity-100' : 'opacity-40'
-              )}
-            >
-              <span className="text-lg">{icons[item.href]}</span>
-              <span className={clsx('text-[9px]', pathname === item.href ? 'text-gold-500' : 'text-[#9ab8a4]')}>
-                {item.label}
-              </span>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Spacer */}
-      <div className="h-16" />
     </>
   )
 }
